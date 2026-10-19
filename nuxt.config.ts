@@ -4,9 +4,28 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/supabase'],
   css: ['~/assets/scss/main.scss'],
+
   runtimeConfig: {
     tmdbReadAccessToken: process.env.TMDB_READ_ACCESS_TOKEN
   },
+
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          quietDeps: true,
+          silenceDeprecations: [
+            'import',
+            'if-function',
+            'color-functions',
+            'global-builtin',
+            'mixed-decls'
+          ]
+        }
+      }
+    }
+  },
+
   supabase: {
     redirectOptions: {
       login: '/login',
