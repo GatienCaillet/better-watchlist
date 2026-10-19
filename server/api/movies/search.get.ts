@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  // Récupération des paramètres de requête dans l'URL (ex: ?query=batman)
+  // Récupération des paramètres de requête dans l'URL (http://localhost:3000/api/movies/search?query=Test)
   const queryParams = getQuery(event)
   const query = queryParams.query as string
 

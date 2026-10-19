@@ -1,4 +1,5 @@
 export default defineEventHandler(async (event) => {
+  // Récupération de l'ID du film depuis les paramètres de l'URL (ex: http://localhost:3000/api/movies/123)
   const id = getRouterParam(event, "id");
 
   // Utilisation de la configuration runtime Nuxt ou secours sur process.env
