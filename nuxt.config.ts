@@ -2,7 +2,19 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/supabase'],
+  modules: ['@nuxtjs/supabase', '@nuxtjs/i18n'],
+
+  i18n: {
+    locales: [
+      { code: 'en', iso: 'en-US', region: 'EN', name: 'English' },
+      { code: 'fr', iso: 'fr-FR', region: 'FR', name: 'Français' },
+      { code: 'es', iso: 'es-ES', region: 'ES', name: 'Español' }
+    ],
+    defaultLocale: 'en',
+    strategy: 'prefix',
+    vueI18n: './i18n.config.ts'
+  },
+
   css: ['~/assets/scss/main.scss'],
 
   runtimeConfig: {

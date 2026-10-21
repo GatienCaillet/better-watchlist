@@ -1,7 +1,23 @@
-// Personnalisation des couleurs Bootstrap
-$primary: #00e054;
-$body-bg: #14181c;
-$body-color: #9ab;
-
-// Importation de Bootstrap
+// app/assets/scss/main.scss
 @import "bootstrap/scss/bootstrap";
+
+// 1. Fond global de l'application
+body {
+  background-color: #14181c;
+  color: #f8fafc;
+}
+
+// 2. Format standardisé pour TOUTES les affiches de films du site
+.poster-ratio {
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  width: 100%;
+}
+
+// 3. Petit effet de zoom réutilisable (pour les logos, les affiches cliquables, etc.)
+.hover-zoom {
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.05);
+  }
+}

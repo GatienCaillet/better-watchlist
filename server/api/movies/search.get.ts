@@ -1,7 +1,10 @@
 export default defineEventHandler(async (event) => {
-  // Récupération des paramètres de requête dans l'URL (http://localhost:3000/api/movies/search?query=Test)
+  // Récupération des paramètres de requête dans l'URL (search?query=Test)
   const queryParams = getQuery(event)
   const query = queryParams.query as string
+
+  // Récupère la langue envoyée par le front, par défaut 'en-US'
+  const lang = queryParams.lang ? String(queryParams.lang) : 'en-US'
 
   // Utilisation de la configuration runtime Nuxt ou secours sur process.env
   const config = useRuntimeConfig()
@@ -15,7 +18,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const data = await $fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=fr-FR&page=1`, {
+    const data = await $fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=${lang}&page=1`, {
       headers: {
         Authorization: `Bearer ${token}`,
         accept: 'application/json'
