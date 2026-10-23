@@ -2,7 +2,9 @@ export const useMovies = () => {
   const { localeProperties } = useI18n()
 
   // TMDB a besoin du format 'fr-FR' ou 'en-US'
-  const getTmdbLang = () => localeProperties.value.iso || 'en-US'
+  const getTmdbLang = () => {
+    return localeProperties.value?.iso || 'en-US'
+  }
 
   // Rechercher des films via notre API Nitro
   const searchMovies = async (query: string) => {
