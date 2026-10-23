@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   if (!id) {
     throw createError({
       statusCode: 400,
-      statusMessage: "ID du film manquant",
+      message: "ID du film manquant",
     });
   }
 
@@ -40,11 +40,15 @@ export default defineEventHandler(async (event) => {
     const shortLang = lang.substring(0, 2); // Transforme "en-US" en "en"
 
     // On récupère le film s'il existe déjà pour ne pas écraser les autres traductions
-    const { data: existingMovie } = await supabase
+    const { data: existingMovie, error: selectError } = await supabase
       .from('movie_cache')
       .select('localized_titles')
       .eq('id', tmdbData.id)
-      .single();
+      .maybeSingle();
+
+    if (selectError) {
+      console.error("Erreur lors de la vérification du film :", selectError);
+    }
 
     const localizedTitles = existingMovie?.localized_titles || {};
     localizedTitles[shortLang] = tmdbData.title; // Ajoute le titre dans la langue en cours
@@ -62,9 +66,11 @@ export default defineEventHandler(async (event) => {
     return tmdbData;
 
   } catch (error) {
+    console.error(`Plantage API / DB :`, error);
+
     throw createError({
       statusCode: 500,
-      statusMessage: `Erreur lors de la récupération du film ${id} depuis TMDB`,
+      message: `Erreur lors de la récupération du film ${id} depuis TMDB`,
     });
   } 
 });

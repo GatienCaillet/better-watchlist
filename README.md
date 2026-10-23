@@ -44,6 +44,7 @@ Warning: never commit API keys directly into the code.
 # Supabase (https://supabase.com/dashboard/project/<<PROJECT_ID>>/settings/api-keys?showConnect=true&connectTab=framework)
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_KEY=your_supabase_secret_key
 
 # TMDB (https://www.themoviedb.org/settings/api)
 TMDB_READ_ACCESS_TOKEN=your_tmdb_token_here
