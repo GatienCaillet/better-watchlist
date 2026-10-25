@@ -1,23 +1,66 @@
-// app/assets/scss/main.scss
+// Variables Bootstrap (doivent être définies AVANT l'import)
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+$headings-font-family: "Outfit", $font-family-sans-serif;
+$headings-font-weight: 700;
+
+// Couleurs sémantiques Bootstrap (Logique d'interface)
+$primary: #22c55e;   // Couleur d'action principale de l'app (Vert)
+$secondary: #64748b; // Textes et boutons secondaires
+$success: #10b981;   // Messages de réussite / Validation (Vert différent du primary)
+$danger: #ef4444;    // Erreurs / Suppressions
+$warning: #f59e0b;   // Avertissements
+$info: #0ea5e9;      // Informations classiques
+$dark: #151922;      // Surfaces (cartes, champs)
+
+// Couleurs personnalisées BetterWatchlist
+$bw-star-color: #f5b301;     // Couleur exclusive pour les notes/étoiles
+$bw-event-color: #8b7cf6;    // Violet pour les soirées films / événements
+$bw-review-serious: #38bdf8; // Bleu pour les critiques sérieuses
+$bw-review-joke: #f5b301;    // Jaune pour les critiques humoristiques
+
+$body-bg-dark: #0b0e14;
+$body-color-dark: #e7eaf1;
+$body-secondary-color-dark: #a3acbd; 
+$border-color-dark: rgba(255, 255, 255, 0.09);
+
+$border-radius: 0.6rem;
+$border-radius-sm: 0.45rem;
+$border-radius-lg: 0.9rem;
+$card-border-radius: 0.9rem;
+$btn-font-weight: 600;
+$input-btn-focus-width: 0.2rem;
+$link-decoration: none;
+
 @import "bootstrap/scss/bootstrap";
 
-// 1. Fond global de l'application
+// Jetons de design réutilisables
+:root,
+[data-bs-theme="dark"] {
+  --bw-bg: #{$body-bg-dark};
+  --bw-surface: #{$dark};
+  --bw-surface-2: #1c2130;
+  --bw-surface-hover: #212739;
+  --bw-border: rgba(255, 255, 255, 0.09);
+  --bw-border-strong: rgba(255, 255, 255, 0.18);
+  --bw-accent: #{$primary};
+  --bw-accent-soft: rgba(34, 197, 94, 0.14);
+  --bw-star: #{$bw-star-color};
+  --bw-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --bw-radius: #{$card-border-radius};
+  --bs-secondary-color: #{$body-secondary-color-dark};
+  --bs-emphasis-color: #fff;
+}
+
 body {
-  background-color: #14181c;
-  color: #f8fafc;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(34, 197, 94, 0.07), transparent 60%),
+    radial-gradient(900px 400px at 100% 0%, rgba(139, 124, 246, 0.06), transparent 60%),
+    var(--bw-bg);
+  background-attachment: fixed;
+  color: $body-color-dark;
+  -webkit-font-smoothing: antialiased;
 }
 
-// 2. Format standardisé pour TOUTES les affiches de films du site
-.poster-ratio {
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-  width: 100%;
-}
-
-// 3. Petit effet de zoom réutilisable (pour les logos, les affiches cliquables, etc.)
-.hover-zoom {
-  transition: transform 0.2s ease-in-out;
-  &:hover {
-    transform: scale(1.05);
-  }
+h1, h2, h3, .h1, .h2, .h3, .display-4 {
+  letter-spacing: -0.02em;
 }
