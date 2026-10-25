@@ -15,7 +15,21 @@ export default defineNuxtConfig({
     vueI18n: './i18n.config.ts'
   },
 
-  css: ['~/assets/scss/main.scss'],
+  css: ['bootstrap-icons/font/bootstrap-icons.css', '~/assets/scss/main.scss'],
+
+  app: {
+    head: {
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'theme-color', content: '#0b0e14' }
+      ],
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap' }
+      ]
+    }
+  },
 
   runtimeConfig: {
     tmdbReadAccessToken: process.env.TMDB_READ_ACCESS_TOKEN
