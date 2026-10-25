@@ -29,7 +29,15 @@ export default defineEventHandler(async (event) => {
     // On retourne l'objet complet TMDB au front-end pour l'affichage de la page
     return tmdbData;
 
-  } catch (error) {
+  } catch (error: any) {
+    // Film inexistant chez TMDB : ce n'est pas une panne, on renvoie un 404
+    if (error?.response?.status === 404) {
+      throw createError({
+        statusCode: 404,
+        message: `Le film ${id} n'existe pas sur TMDB`,
+      });
+    }
+
     console.error(`Plantage API / DB :`, error);
 
     throw createError({
