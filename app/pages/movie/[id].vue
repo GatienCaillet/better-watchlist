@@ -13,11 +13,11 @@
         <div class="col-12 col-md-4 col-lg-3">
           <!-- Affiche -->
           <div class="poster-wrapper mb-4 shadow-lg rounded">
-            <img 
+            <img
               v-if="movie.poster_path"
-              :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`" 
+              :src="posterUrl(movie.poster_path, 'w500') || ''"
               :alt="movie.title"
-              class="img-fluid rounded border border-secondary border-opacity-25 w-100"
+              class="poster-ratio rounded border border-secondary border-opacity-25"
             />
           </div>
 
@@ -104,18 +104,29 @@
   </div>
 
   <!-- Loader plein écran pendant la requête API -->
-  <div v-else-if="pending" class="min-vh-100 bg-dark text-light d-flex align-items-center justify-content-center">
+  <div v-else-if="pending" class="min-vh-100 d-flex align-items-center justify-content-center">
     <div class="spinner-border text-secondary" role="status"></div>
+  </div>
+
+  <!-- L'API n'a rien renvoyé : mauvais ID ou TMDB indisponible -->
+  <div v-else class="container py-5 text-center">
+    <i class="bi bi-film fs-1 text-muted" aria-hidden="true"></i>
+    <h1 class="h4 mt-3">{{ $t('movieNotFound') }}</h1>
+    <NuxtLinkLocale to="/search" class="btn btn-primary mt-2">
+      <i class="bi bi-search" aria-hidden="true"></i> {{ $t('search.title') }}
+    </NuxtLinkLocale>
   </div>
 </template>
 
 <script lang="ts" setup>
 const route = useRoute()
-const { locale, localeProperties } = useI18n()
+const { locale } = useI18n()
 const { getMovieDetails } = useMovies()
 
 const movie = ref<any>(null)
 const pending = ref(true)
+
+useHead({ title: () => movie.value?.title || '' })
 
 // Charger les données du film
 const fetchMovieData = async () => {
@@ -142,15 +153,15 @@ const formattedRuntime = computed(() => {
   return `${hours}h ${minutes}m`
 })
 
-// Récupérer les plateformes VOD dynamiquement selon la langue active
+// Récupérer les plateformes VOD selon le pays associé à la langue active
+// (la "region" de la locale anglaise vaut EN, qui n'est pas un code pays TMDB)
 const providers = computed(() => {
-  const countryCode = (localeProperties.value as any).region || 'US'
-  return movie.value?.['watch/providers']?.results?.[countryCode]
+  return movie.value?.['watch/providers']?.results?.[defaultRegion(locale.value)]
 })
 
 // Style dynamique de l'image de fond
 const backdropStyle = computed(() => {
-  if (!movie.value?.backdrop_path) return { backgroundColor: '#14181c' }
+  if (!movie.value?.backdrop_path) return { backgroundColor: 'var(--bw-surface)' }
   return {
     backgroundImage: `url('https://image.tmdb.org/t/p/original${movie.value.backdrop_path}')`,
     backgroundSize: 'cover',
