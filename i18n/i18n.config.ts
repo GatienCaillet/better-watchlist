@@ -2,6 +2,7 @@ export default defineI18nConfig(() => ({
   legacy: false,
   messages: {
     en: {
+      auth: { login: 'Log in', loggingIn: 'Logging in...', loginTitle: 'Welcome back', loginSubtitle: 'Log in to find your watchlist and your friends.', email: 'Email', password: 'Password', invalidCredentials: 'Wrong email or password. Check them and try again.', emailNotConfirmed: 'Your email is not confirmed yet: click the link we sent you.' },
       home: { title: 'Find what to watch tonight.', tagline: 'Search a movie, see where it is streaming, and soon share your reviews with your friends.', trending: 'Trending this week', trendingError: 'Trending movies are unavailable right now.' },
       nav: { label: 'Main navigation', searchPlaceholder: 'Search for a movie...', language: 'Change language' },
       watchlist: 'Watchlist',
@@ -20,6 +21,7 @@ export default defineI18nConfig(() => ({
       }
     },
     fr: {
+      auth: { login: 'Connexion', loggingIn: 'Connexion...', loginTitle: 'Content de te revoir', loginSubtitle: 'Connecte-toi pour retrouver ta watchlist et tes amis.', email: 'E-mail', password: 'Mot de passe', invalidCredentials: 'E-mail ou mot de passe incorrect. Vérifie-les et réessaie.', emailNotConfirmed: "Ton e-mail n'est pas encore confirmé : clique sur le lien qu'on t'a envoyé." },
       home: { title: 'Trouve quoi regarder ce soir.', tagline: 'Cherche un film, regarde où il est disponible en streaming, et bientôt partage tes critiques avec tes amis.', trending: 'Tendances de la semaine', trendingError: 'Les tendances sont indisponibles pour le moment.' },
       nav: { label: 'Navigation principale', searchPlaceholder: 'Rechercher un film...', language: 'Changer de langue' },
       watchlist: 'Watchlist',
@@ -38,6 +40,7 @@ export default defineI18nConfig(() => ({
       }
     },
     es: {
+      auth: { login: 'Iniciar sesión', loggingIn: 'Iniciando sesión...', loginTitle: 'Bienvenido de nuevo', loginSubtitle: 'Inicia sesión para recuperar tu lista y a tus amigos.', email: 'Correo electrónico', password: 'Contraseña', invalidCredentials: 'Correo o contraseña incorrectos. Revísalos e inténtalo de nuevo.', emailNotConfirmed: 'Tu correo aún no está confirmado: haz clic en el enlace que te enviamos.' },
       home: { title: 'Encuentra qué ver esta noche.', tagline: 'Busca una película, mira dónde está en streaming y pronto comparte tus reseñas con tus amigos.', trending: 'Tendencias de la semana', trendingError: 'Las tendencias no están disponibles por ahora.' },
       nav: { label: 'Navegación principal', searchPlaceholder: 'Busca una película...', language: 'Cambiar idioma' },
       watchlist: 'Lista de seguimiento',

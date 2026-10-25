@@ -48,11 +48,17 @@
           </li>
         </ul>
       </div>
+
+      <!-- Lien de connexion, masqué une fois connecté -->
+      <NuxtLinkLocale v-if="!user" to="/login" class="btn btn-sm btn-primary text-nowrap">
+        {{ $t('auth.login') }}
+      </NuxtLinkLocale>
     </div>
   </nav>
 </template>
 
 <script lang="ts" setup>
+const user = useSupabaseUser()
 const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
 const { locale, locales } = useI18n()
