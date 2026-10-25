@@ -5,10 +5,7 @@ export default defineEventHandler(async (event) => {
 
   // Récupère la langue envoyée par le front, par défaut 'en-US'
   const lang = queryParams.lang ? String(queryParams.lang) : 'en-US'
-
-  // Utilisation de la configuration runtime Nuxt ou secours sur process.env
-  const config = useRuntimeConfig()
-  const token = config.tmdbReadAccessToken || process.env.TMDB_READ_ACCESS_TOKEN
+  const page = queryParams.page ? Number(queryParams.page) : 1
 
   if (!query) {
     throw createError({
@@ -18,13 +15,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const data = await $fetch(`https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=${lang}&page=1`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        accept: 'application/json'
-      }
-    })
-    return data
+    return await tmdbFetch('/search/movie', { query, language: lang, page })
   } catch (error: any) {
     throw createError({
       statusCode: error?.response?.status || 500,
