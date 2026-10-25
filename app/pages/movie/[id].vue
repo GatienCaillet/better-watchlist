@@ -23,9 +23,24 @@
 
           <!-- Panneau d'actions -->
           <div class="card bg-dark text-light border-secondary border-opacity-50 p-3 shadow-sm mb-4">
-            <button class="btn btn-success w-100 mb-2 fw-semibold">
-              + {{ $t('watchlist') }}
+            <button
+              v-if="userId"
+              type="button"
+              class="btn w-100 mb-2 fw-semibold"
+              :class="inWatchlist ? 'btn-outline-primary' : 'btn-primary'"
+              :aria-pressed="inWatchlist"
+              :disabled="watchlistLoading"
+              @click="toggleWatchlist"
+            >
+              <span v-if="watchlistLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+              <i v-else class="bi" :class="inWatchlist ? 'bi-bookmark-check-fill' : 'bi-bookmark-plus'" aria-hidden="true"></i>
+              {{ inWatchlist ? $t('inWatchlist') : $t('addToWatchlist') }}
             </button>
+            <!-- Visiteur : on l'invite à se connecter pour utiliser la watchlist -->
+            <NuxtLinkLocale v-else to="/login" class="btn btn-primary w-100 mb-2 fw-semibold">
+              <i class="bi bi-bookmark-plus" aria-hidden="true"></i> {{ $t('addToWatchlist') }}
+            </NuxtLinkLocale>
+            <p v-if="watchlistError" class="small text-danger mb-2" role="alert">{{ watchlistError }}</p>
             <button class="btn btn-outline-light w-100 fw-semibold">
               ★ {{ $t('rate') }}
             </button>
@@ -126,9 +141,10 @@
 
 <script lang="ts" setup>
 const route = useRoute()
-const { locale } = useI18n()
+const supabase = useSupabaseClient()
+const { t, locale } = useI18n()
 const { getMovieDetails } = useMovies()
-const { profile, platforms } = useCurrentUser()
+const { userId, profile, platforms } = useCurrentUser()
 
 const movie = ref<any>(null)
 const pending = ref(true)
@@ -142,7 +158,46 @@ const fetchMovieData = async () => {
   pending.value = false
 }
 
-onMounted(fetchMovieData)
+// Watchlist personnelle
+const inWatchlist = ref(false)
+const watchlistLoading = ref(false)
+const watchlistError = ref('')
+
+const checkWatchlist = async () => {
+  if (!userId.value) return
+  const { data } = await supabase
+    .from('personal_watchlist')
+    .select('movie_id')
+    .eq('user_id', userId.value)
+    .eq('movie_id', Number(route.params.id))
+    .maybeSingle()
+  inWatchlist.value = !!data
+}
+
+// Le film est déjà dans movie_cache (la route /api/movies/[id] l'y ajoute),
+// donc la clé étrangère de personal_watchlist est respectée
+const toggleWatchlist = async () => {
+  watchlistLoading.value = true
+  watchlistError.value = ''
+
+  const { error } = inWatchlist.value
+    ? await supabase.from('personal_watchlist').delete().eq('user_id', userId.value).eq('movie_id', movie.value.id)
+    : await supabase.from('personal_watchlist').insert({ user_id: userId.value, movie_id: movie.value.id })
+
+  watchlistLoading.value = false
+
+  if (error) {
+    console.error('Erreur watchlist :', error)
+    watchlistError.value = t('watchlistError')
+    return
+  }
+  inWatchlist.value = !inWatchlist.value
+}
+
+onMounted(async () => {
+  await fetchMovieData()
+  await checkWatchlist()
+})
 
 // Recharger les données si la langue change dynamiquement
 watch(locale, fetchMovieData)
