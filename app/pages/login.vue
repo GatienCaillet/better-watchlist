@@ -39,6 +39,11 @@
           {{ loading ? $t('auth.loggingIn') : $t('auth.login') }}
         </button>
       </form>
+
+      <p class="text-center text-muted small mt-4 mb-0">
+        {{ $t('auth.noAccount') }}
+        <NuxtLinkLocale to="/signup" class="fw-semibold">{{ $t('auth.signup') }}</NuxtLinkLocale>
+      </p>
     </div>
   </div>
 </template>

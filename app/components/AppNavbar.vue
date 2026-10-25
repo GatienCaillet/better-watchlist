@@ -74,10 +74,15 @@
         </ul>
       </div>
 
-      <!-- Lien de connexion, masqué une fois connecté -->
-      <NuxtLinkLocale v-else to="/login" class="btn btn-sm btn-primary text-nowrap">
-        {{ $t('auth.login') }}
-      </NuxtLinkLocale>
+      <!-- Connexion / inscription, masqués une fois connecté -->
+      <template v-else>
+        <NuxtLinkLocale to="/login" class="btn btn-sm btn-outline-secondary text-nowrap d-none d-sm-inline-flex">
+          {{ $t('auth.login') }}
+        </NuxtLinkLocale>
+        <NuxtLinkLocale to="/signup" class="btn btn-sm btn-primary text-nowrap">
+          {{ $t('auth.signup') }}
+        </NuxtLinkLocale>
+      </template>
     </div>
   </nav>
 </template>
