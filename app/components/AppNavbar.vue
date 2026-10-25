@@ -69,6 +69,11 @@
             <span v-if="profile" class="d-block">{{ user.email }}</span>
           </li>
           <li>
+            <NuxtLinkLocale to="/watchlist" class="dropdown-item" @click="userOpen = false">
+              <i class="bi bi-bookmark me-2" aria-hidden="true"></i>{{ $t('nav.watchlist') }}
+            </NuxtLinkLocale>
+          </li>
+          <li>
             <NuxtLinkLocale to="/settings" class="dropdown-item" @click="userOpen = false">
               <i class="bi bi-gear me-2" aria-hidden="true"></i>{{ $t('nav.settings') }}
             </NuxtLinkLocale>
