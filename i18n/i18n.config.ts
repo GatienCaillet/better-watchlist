@@ -2,6 +2,7 @@ export default defineI18nConfig(() => ({
   legacy: false,
   messages: {
     en: {
+      home: { title: 'Find what to watch tonight.', tagline: 'Search a movie, see where it is streaming, and soon share your reviews with your friends.', trending: 'Trending this week', trendingError: 'Trending movies are unavailable right now.' },
       nav: { label: 'Main navigation', searchPlaceholder: 'Search for a movie...', language: 'Change language' },
       watchlist: 'Watchlist',
       rate: 'Rate / Log',
@@ -19,6 +20,7 @@ export default defineI18nConfig(() => ({
       }
     },
     fr: {
+      home: { title: 'Trouve quoi regarder ce soir.', tagline: 'Cherche un film, regarde où il est disponible en streaming, et bientôt partage tes critiques avec tes amis.', trending: 'Tendances de la semaine', trendingError: 'Les tendances sont indisponibles pour le moment.' },
       nav: { label: 'Navigation principale', searchPlaceholder: 'Rechercher un film...', language: 'Changer de langue' },
       watchlist: 'Watchlist',
       rate: 'Noter / Logger',
@@ -36,6 +38,7 @@ export default defineI18nConfig(() => ({
       }
     },
     es: {
+      home: { title: 'Encuentra qué ver esta noche.', tagline: 'Busca una película, mira dónde está en streaming y pronto comparte tus reseñas con tus amigos.', trending: 'Tendencias de la semana', trendingError: 'Las tendencias no están disponibles por ahora.' },
       nav: { label: 'Navegación principal', searchPlaceholder: 'Busca una película...', language: 'Cambiar idioma' },
       watchlist: 'Lista de seguimiento',
       rate: 'Calificar / Registrar',

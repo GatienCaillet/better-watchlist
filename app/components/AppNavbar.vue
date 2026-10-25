@@ -1,8 +1,7 @@
 <template>
   <nav class="navbar sticky-top app-navbar" :aria-label="$t('nav.label')">
     <div class="container flex-nowrap gap-2">
-      <!-- Pas encore de page d'accueil : le logo mène à la recherche -->
-      <NuxtLinkLocale to="/search" class="navbar-brand d-flex align-items-center gap-2 fw-bold me-auto">
+      <NuxtLinkLocale to="/" class="navbar-brand d-flex align-items-center gap-2 fw-bold me-auto">
         <span class="brand-logo" aria-hidden="true"><i class="bi bi-film"></i></span>
         <span class="brand-name">Better<span class="text-primary">Watchlist</span></span>
       </NuxtLinkLocale>
