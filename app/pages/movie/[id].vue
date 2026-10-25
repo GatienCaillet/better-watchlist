@@ -32,20 +32,26 @@
           </div>
 
           <!-- Plateformes VOD adaptées au pays -->
-          <div v-if="providers?.flatrate?.length" class="vod-section">
-            <h6 class="text-uppercase text-muted fw-bold small mb-2">{{ $t('streaming') }}</h6>
-            <div class="d-flex flex-wrap gap-2">
-              <img 
-                v-for="provider in providers.flatrate" 
-                :key="provider.provider_id"
-                :src="`https://image.tmdb.org/t/p/original${provider.logo_path}`" 
-                :alt="provider.provider_name"
-                :title="provider.provider_name"
-                class="rounded provider-logo border border-secondary border-opacity-25"
-                width="40"
-                height="40"
-              />
+          <div class="vod-section">
+            <h6 class="text-uppercase text-muted fw-bold small mb-2">
+              {{ $t('streaming') }} <span class="fw-normal">· {{ regionCode }}</span>
+            </h6>
+            <div v-if="streamingProviders.length" class="d-flex flex-wrap gap-2">
+              <!-- Les plateformes de l'utilisateur passent en premier, avec une coche -->
+              <div v-for="provider in streamingProviders" :key="provider.provider_id" class="position-relative">
+                <img
+                  :src="`https://image.tmdb.org/t/p/w92${provider.logo_path}`"
+                  :alt="provider.provider_name"
+                  :title="isOwned(provider) ? `${provider.provider_name} · ${$t('youHaveIt')}` : provider.provider_name"
+                  class="rounded provider-logo"
+                  :class="{ owned: isOwned(provider) }"
+                  width="40"
+                  height="40"
+                />
+                <i v-if="isOwned(provider)" class="bi bi-check-circle-fill owned-check" aria-hidden="true"></i>
+              </div>
             </div>
+            <p v-else class="small text-muted mb-0">{{ $t('notStreaming') }}</p>
           </div>
         </div>
 
@@ -122,6 +128,7 @@
 const route = useRoute()
 const { locale } = useI18n()
 const { getMovieDetails } = useMovies()
+const { profile, platforms } = useCurrentUser()
 
 const movie = ref<any>(null)
 const pending = ref(true)
@@ -153,10 +160,16 @@ const formattedRuntime = computed(() => {
   return `${hours}h ${minutes}m`
 })
 
-// Récupérer les plateformes VOD selon le pays associé à la langue active
+// Pays du profil si connecté, sinon pays associé à la langue active
 // (la "region" de la locale anglaise vaut EN, qui n'est pas un code pays TMDB)
-const providers = computed(() => {
-  return movie.value?.['watch/providers']?.results?.[defaultRegion(locale.value)]
+const regionCode = computed(() => profile.value?.watch_region || defaultRegion(locale.value))
+
+const isOwned = (provider: any) => platforms.value.includes(provider.provider_id)
+
+// Plateformes d'abonnement dans ce pays, celles de l'utilisateur en premier
+const streamingProviders = computed(() => {
+  const list = movie.value?.['watch/providers']?.results?.[regionCode.value]?.flatrate || []
+  return [...list].sort((a: any, b: any) => Number(isOwned(b)) - Number(isOwned(a)))
 })
 
 // Style dynamique de l'image de fond
@@ -187,5 +200,21 @@ const backdropStyle = computed(() => {
   margin-top: -200px;
   position: relative;
   z-index: 2;
+}
+
+// Plateforme possédée par l'utilisateur : contour vert + coche
+.provider-logo.owned {
+  outline: 2px solid var(--bw-accent);
+  outline-offset: 2px;
+}
+
+.owned-check {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  color: var(--bw-accent);
+  background: var(--bw-bg);
+  border-radius: 50%;
+  font-size: 0.85rem;
 }
 </style>

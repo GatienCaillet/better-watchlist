@@ -107,7 +107,8 @@ definePageMeta({ middleware: 'auth' })
 
 const supabase = useSupabaseClient()
 const { t, locale } = useI18n()
-const { userId, profile, loadProfile } = useCurrentUser()
+// platforms est partagé avec le reste de l'app (page film...) via useCurrentUser
+const { userId, profile, platforms, loadProfile } = useCurrentUser()
 
 useHead({ title: () => t('settings.title') })
 
@@ -183,26 +184,19 @@ const saveProfile = async () => {
 const { getProviders } = useMovies()
 
 const providers = ref<any[]>([])
-const platforms = ref<number[]>([])
 const loadingProviders = ref(false)
 const platformError = ref('')
 
-const loadPlatforms = async () => {
+// Les plateformes possédées sont déjà chargées avec le profil, on charge juste la liste du pays
+const loadProviders = async () => {
   if (!profile.value) return
   loadingProviders.value = true
-
-  const [allProviders, { data }] = await Promise.all([
-    getProviders(profile.value.watch_region),
-    supabase.from('user_platforms').select('provider_id').eq('user_id', userId.value)
-  ])
-
-  providers.value = allProviders
-  platforms.value = (data || []).map((p: any) => p.provider_id)
+  providers.value = await getProviders(profile.value.watch_region)
   loadingProviders.value = false
 }
 
 // Recharge la liste quand le pays enregistré change
-watch(() => profile.value?.watch_region, loadPlatforms, { immediate: true })
+watch(() => profile.value?.watch_region, loadProviders, { immediate: true })
 
 const togglePlatform = async (providerId: number) => {
   platformError.value = ''
