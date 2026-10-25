@@ -2,6 +2,7 @@ export default defineI18nConfig(() => ({
   legacy: false,
   messages: {
     en: {
+      nav: { label: 'Main navigation', searchPlaceholder: 'Search for a movie...', language: 'Change language' },
       watchlist: 'Watchlist',
       rate: 'Rate / Log',
       streaming: 'Streaming on',
@@ -18,6 +19,7 @@ export default defineI18nConfig(() => ({
       }
     },
     fr: {
+      nav: { label: 'Navigation principale', searchPlaceholder: 'Rechercher un film...', language: 'Changer de langue' },
       watchlist: 'Watchlist',
       rate: 'Noter / Logger',
       streaming: 'En streaming',
@@ -34,6 +36,7 @@ export default defineI18nConfig(() => ({
       }
     },
     es: {
+      nav: { label: 'Navegación principal', searchPlaceholder: 'Busca una película...', language: 'Cambiar idioma' },
       watchlist: 'Lista de seguimiento',
       rate: 'Calificar / Registrar',
       streaming: 'En streaming',
