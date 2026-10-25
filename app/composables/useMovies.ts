@@ -37,8 +37,21 @@ export const useMovies = () => {
     }
   }
 
+  // Plateformes VOD disponibles dans un pays
+  const getProviders = async (region: string) => {
+    try {
+      return await $fetch<any[]>('/api/providers', {
+        params: { region, lang: getTmdbLang() }
+      })
+    } catch (error) {
+      console.error('Erreur lors de la récupération des plateformes :', error)
+      return []
+    }
+  }
+
   return {
     searchMovies,
-    getMovieDetails
+    getMovieDetails,
+    getProviders
   }
 }
