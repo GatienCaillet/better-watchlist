@@ -49,8 +49,33 @@
         </ul>
       </div>
 
+      <!-- Menu utilisateur une fois connecté -->
+      <div v-if="user" ref="userMenu" class="dropdown">
+        <button
+          type="button"
+          class="btn btn-sm p-0 user-button"
+          :aria-expanded="userOpen"
+          aria-haspopup="true"
+          :aria-label="$t('nav.account')"
+          @click="userOpen = !userOpen"
+        >
+          <span class="user-initial" aria-hidden="true">{{ initial }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" data-bs-popper="static" :class="{ show: userOpen }">
+          <li class="px-3 py-2 small text-muted border-bottom mb-1">
+            {{ $t('nav.signedInAs') }}<br />
+            <strong class="text-light">{{ user.email }}</strong>
+          </li>
+          <li>
+            <button type="button" class="dropdown-item text-danger" @click="logout">
+              <i class="bi bi-box-arrow-right me-2" aria-hidden="true"></i>{{ $t('nav.logout') }}
+            </button>
+          </li>
+        </ul>
+      </div>
+
       <!-- Lien de connexion, masqué une fois connecté -->
-      <NuxtLinkLocale v-if="!user" to="/login" class="btn btn-sm btn-primary text-nowrap">
+      <NuxtLinkLocale v-else to="/login" class="btn btn-sm btn-primary text-nowrap">
         {{ $t('auth.login') }}
       </NuxtLinkLocale>
     </div>
@@ -58,6 +83,8 @@
 </template>
 
 <script lang="ts" setup>
+const supabase = useSupabaseClient()
+// useSupabaseUser renvoie les infos du JWT (sub, email...)
 const user = useSupabaseUser()
 const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
@@ -66,6 +93,17 @@ const { locale, locales } = useI18n()
 const search = ref('')
 const langOpen = ref(false)
 const langMenu = ref<HTMLElement | null>(null)
+const userOpen = ref(false)
+const userMenu = ref<HTMLElement | null>(null)
+
+// Initiale de l'e-mail en attendant d'avoir le pseudo du profil
+const initial = computed(() => (user.value?.email || '?').charAt(0).toUpperCase())
+
+const logout = async () => {
+  userOpen.value = false
+  await supabase.auth.signOut()
+  navigateTo(localePath('/'))
+}
 
 const goSearch = () => {
   const q = search.value.trim()
@@ -74,12 +112,17 @@ const goSearch = () => {
   search.value = ''
 }
 
-// Le menu se ferme au clic en dehors ou avec Échap (on n'utilise pas le JS de Bootstrap)
+// Les menus se ferment au clic en dehors ou avec Échap (on n'utilise pas le JS de Bootstrap)
 const onDocumentClick = (e: MouseEvent) => {
-  if (langMenu.value && !langMenu.value.contains(e.target as Node)) langOpen.value = false
+  const target = e.target as Node
+  if (langMenu.value && !langMenu.value.contains(target)) langOpen.value = false
+  if (userMenu.value && !userMenu.value.contains(target)) userOpen.value = false
 }
 const onKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') langOpen.value = false
+  if (e.key === 'Escape') {
+    langOpen.value = false
+    userOpen.value = false
+  }
 }
 
 onMounted(() => {
@@ -126,6 +169,23 @@ onBeforeUnmount(() => {
     padding-left: 2rem;
     border-radius: 999px;
   }
+}
+
+.user-initial {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bw-surface-2);
+  border: 2px solid var(--bw-border-strong);
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+}
+
+.user-button:hover .user-initial {
+  border-color: var(--bw-accent);
 }
 
 .search-icon {
