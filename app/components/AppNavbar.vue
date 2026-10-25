@@ -53,18 +53,20 @@
       <div v-if="user" ref="userMenu" class="dropdown">
         <button
           type="button"
-          class="btn btn-sm p-0 user-button"
+          class="btn btn-sm p-0 d-flex align-items-center gap-2 user-button"
           :aria-expanded="userOpen"
           aria-haspopup="true"
           :aria-label="$t('nav.account')"
           @click="userOpen = !userOpen"
         >
           <span class="user-initial" aria-hidden="true">{{ initial }}</span>
+          <span v-if="profile" class="d-none d-lg-inline text-light">{{ profile.username }}</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-end" data-bs-popper="static" :class="{ show: userOpen }">
           <li class="px-3 py-2 small text-muted border-bottom mb-1">
             {{ $t('nav.signedInAs') }}<br />
-            <strong class="text-light">{{ user.email }}</strong>
+            <strong class="text-light">{{ profile?.username || user.email }}</strong>
+            <span v-if="profile" class="d-block">{{ user.email }}</span>
           </li>
           <li>
             <button type="button" class="dropdown-item text-danger" @click="logout">
@@ -89,8 +91,8 @@
 
 <script lang="ts" setup>
 const supabase = useSupabaseClient()
-// useSupabaseUser renvoie les infos du JWT (sub, email...)
-const user = useSupabaseUser()
+// user = infos du JWT (sub, email...), profile = ligne de la table profiles (pseudo...)
+const { user, userId, profile, loadProfile } = useCurrentUser()
 const localePath = useLocalePath()
 const switchLocalePath = useSwitchLocalePath()
 const { locale, locales } = useI18n()
@@ -101,8 +103,12 @@ const langMenu = ref<HTMLElement | null>(null)
 const userOpen = ref(false)
 const userMenu = ref<HTMLElement | null>(null)
 
-// Initiale de l'e-mail en attendant d'avoir le pseudo du profil
-const initial = computed(() => (user.value?.email || '?').charAt(0).toUpperCase())
+// Initiale du pseudo (ou de l'e-mail si le profil n'est pas encore chargé)
+const initial = computed(() => (profile.value?.username || user.value?.email || '?').charAt(0).toUpperCase())
+
+// Le profil est chargé au démarrage par le plugin current-user,
+// on le recharge seulement en cas de connexion / déconnexion
+watch(userId, loadProfile)
 
 const logout = async () => {
   userOpen.value = false
