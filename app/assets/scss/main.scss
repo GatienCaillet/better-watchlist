@@ -64,3 +64,21 @@ body {
 h1, h2, h3, .h1, .h2, .h3, .display-4 {
   letter-spacing: -0.02em;
 }
+
+// Format standard des affiches de films (2/3), même si l'image TMDB n'a pas exactement ce ratio
+.poster-ratio {
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  width: 100%;
+  background-color: var(--bw-surface-2);
+}
+
+// Léger zoom au survol des affiches cliquables
+.hover-zoom {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.04);
+    box-shadow: var(--bw-shadow);
+  }
+}
