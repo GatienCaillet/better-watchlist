@@ -65,6 +65,12 @@ h1, h2, h3, .h1, .h2, .h3, .display-4 {
   letter-spacing: -0.02em;
 }
 
+// Un bouton inactif doit se distinguer nettement d'un bouton utilisable
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.4;
+}
+
 // Format standard des affiches de films (2/3), même si l'image TMDB n'a pas exactement ce ratio
 .poster-ratio {
   aspect-ratio: 2 / 3;
