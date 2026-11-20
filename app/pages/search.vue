@@ -75,17 +75,3 @@ watch(() => route.query.q, (value) => {
   runSearch()
 })
 </script>
-
-<style lang="scss" scoped>
-.page-title {
-  font-size: 1.375rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.empty-state {
-  border: 1px dashed var(--bw-border-strong);
-  border-radius: var(--bw-radius);
-  background: #fff;
-}
-</style>
