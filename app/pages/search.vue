@@ -1,26 +1,16 @@
 <template>
   <div class="container page-container">
-    <h1 class="page-title mb-3">{{ $t('search.title') }}</h1>
+    <!-- La saisie se fait dans la barre de recherche du menu -->
+    <h1 class="page-title mb-4">
+      {{ query ? $t('search.resultsFor', { query }) : $t('search.title') }}
+    </h1>
 
-    <form class="mb-4" role="search" @submit.prevent="submit">
-      <label for="search-input" class="visually-hidden">{{ $t('search.placeholder') }}</label>
-      <div class="input-group input-group-lg">
-        <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
-        <input
-          id="search-input"
-          v-model="query"
-          type="search"
-          class="form-control"
-          :placeholder="$t('search.placeholder')"
-          autofocus
-        />
-        <button class="btn btn-primary px-4" type="submit">
-          {{ $t('search.button') }}
-        </button>
-      </div>
-    </form>
+    <div v-if="!query" class="empty-state text-center p-5">
+      <i class="bi bi-search fs-1 text-muted" aria-hidden="true"></i>
+      <p class="text-muted mt-2 mb-0">{{ $t('search.prompt') }}</p>
+    </div>
 
-    <div v-if="loading" class="text-center py-5">
+    <div v-else-if="loading" class="text-center py-5">
       <div class="spinner-border text-secondary" role="status">
         <span class="visually-hidden">{{ $t('search.loading') }}</span>
       </div>
@@ -41,7 +31,6 @@
 
 <script lang="ts" setup>
 const route = useRoute()
-const router = useRouter()
 const { t } = useI18n()
 const { searchMovies } = useMovies()
 
@@ -62,10 +51,6 @@ const runSearch = async () => {
   movies.value = data?.results || []
   loading.value = false
   searched.value = true
-}
-
-const submit = () => {
-  router.replace({ query: { q: query.value.trim() } })
 }
 
 onMounted(runSearch)

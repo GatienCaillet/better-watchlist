@@ -25,6 +25,8 @@ export default defineI18nConfig(() => ({
         placeholder: 'Search for a movie...',
         button: 'Search',
         loading: 'Searching...',
+        resultsFor: 'Results for “{query}”',
+        prompt: 'Click the magnifying glass in the menu and type a movie title.',
         noResults: 'No movie found. Check the spelling or try the original title.'
       }
     },
@@ -52,6 +54,8 @@ export default defineI18nConfig(() => ({
         placeholder: 'Rechercher un film...',
         button: 'Rechercher',
         loading: 'Recherche en cours...',
+        resultsFor: 'Résultats pour « {query} »',
+        prompt: "Clique sur la loupe du menu et tape le titre d'un film.",
         noResults: "Aucun film trouvé. Vérifie l'orthographe ou essaie le titre original."
       }
     },
@@ -79,6 +83,8 @@ export default defineI18nConfig(() => ({
         placeholder: 'Busca una película...',
         button: 'Buscar',
         loading: 'Buscando...',
+        resultsFor: 'Resultados para «{query}»',
+        prompt: 'Haz clic en la lupa del menú y escribe el título de una película.',
         noResults: 'No se encontró ninguna película. Revisa la ortografía o prueba el título original.'
       }
     }

@@ -18,16 +18,35 @@
         >
           {{ $t(link.label) }}
         </NuxtLinkLocale>
-        <NuxtLinkLocale
-          to="/search"
-          class="nav-pill nav-pill-icon"
-          :class="{ active: isActive('/search') }"
-          :aria-label="$t('search.title')"
-          :title="$t('search.title')"
-          :aria-current="isActive('/search') ? 'page' : undefined"
-        >
-          <i class="bi bi-search" aria-hidden="true"></i>
-        </NuxtLinkLocale>
+        <!-- Recherche : la loupe déplie le champ directement dans le menu -->
+        <form class="nav-search" :class="{ open: searchOpen }" role="search" @submit.prevent="submitSearch">
+          <label for="nav-search" class="visually-hidden">{{ $t('nav.searchPlaceholder') }}</label>
+          <input
+            id="nav-search"
+            ref="searchInput"
+            v-model="search"
+            type="search"
+            class="nav-search-input"
+            :placeholder="$t('nav.searchPlaceholder')"
+            :tabindex="searchOpen ? 0 : -1"
+            :aria-hidden="!searchOpen"
+            @keydown.esc="closeSearch"
+            @blur="onSearchBlur"
+          />
+          <button
+            type="button"
+            class="nav-pill nav-pill-icon"
+            :class="{ active: searchOpen || isActive('/search') }"
+            :aria-label="searchOpen ? $t('search.button') : $t('search.title')"
+            :title="searchOpen ? $t('search.button') : $t('search.title')"
+            :aria-expanded="searchOpen"
+            aria-controls="nav-search"
+            @mousedown.prevent
+            @click="onSearchButton"
+          >
+            <i class="bi bi-search" aria-hidden="true"></i>
+          </button>
+        </form>
       </div>
 
       <div class="nav-actions">
@@ -138,6 +157,56 @@ const isActive = (to: string) => {
   if (to === '/') return route.path === target
   return route.path === target || route.path.startsWith(`${target}/`)
 }
+
+// Recherche dépliable : fermée, on ne voit que la loupe ; ouverte, le champ s'agrandit dans le menu
+const search = ref('')
+const searchOpen = ref(false)
+const searchInput = ref<HTMLInputElement | null>(null)
+
+const openSearch = async () => {
+  searchOpen.value = true
+  await nextTick()
+  searchInput.value?.focus()
+}
+
+const closeSearch = () => {
+  searchOpen.value = false
+  searchInput.value?.blur()
+}
+
+const submitSearch = () => {
+  const q = search.value.trim()
+  if (!q) return
+  navigateTo({ path: localePath('/search'), query: { q } })
+}
+
+// Loupe : ouvre le champ, puis lance la recherche s'il y a du texte (sinon referme)
+const onSearchButton = () => {
+  if (!searchOpen.value) return openSearch()
+  if (search.value.trim()) return submitSearch()
+  closeSearch()
+}
+
+// Le champ se referme quand on clique ailleurs, s'il est vide
+const onSearchBlur = () => {
+  if (!search.value.trim()) searchOpen.value = false
+}
+
+// Sur la page de résultats, le champ reste ouvert avec la recherche en cours
+watch(() => route.query.q, (q) => {
+  if (isActive('/search') && q) {
+    search.value = String(q)
+    searchOpen.value = true
+  }
+}, { immediate: true })
+
+// En quittant la recherche, le champ se vide et se referme
+watch(() => route.path, () => {
+  if (!isActive('/search')) {
+    search.value = ''
+    searchOpen.value = false
+  }
+})
 
 // Initiale du pseudo (ou de l'e-mail si le profil n'est pas encore chargé)
 const initial = computed(() => (profile.value?.username || user.value?.email || '?').charAt(0).toUpperCase())
@@ -270,9 +339,59 @@ onBeforeUnmount(() => {
 }
 
 .nav-pill-icon {
+  flex-shrink: 0;
   width: 2.1rem;
   padding: 0;
+  background: #fff;
   color: var(--bw-ink);
+}
+
+// Champ de recherche replié derrière la loupe, qui s'agrandit à l'ouverture
+.nav-search {
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  transition: background-color 0.2s ease;
+
+  &.open {
+    background: var(--bw-bg);
+  }
+}
+
+.nav-search-input {
+  width: 0;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--bw-ink);
+  font-size: 0.9rem;
+  opacity: 0;
+  transition: width 0.25s ease, padding 0.25s ease, opacity 0.2s ease;
+
+  &::placeholder {
+    color: #9ca3af;
+  }
+
+  // Le contour de focus est porté par le groupe de recherche
+  &:focus,
+  &:focus-visible {
+    outline: none !important;
+  }
+
+  .open & {
+    width: 14rem;
+    padding: 0 0.5rem 0 1rem;
+    opacity: 1;
+
+    @media (max-width: 575.98px) {
+      width: 9rem;
+    }
+  }
+}
+
+.nav-search.open:focus-within {
+  box-shadow: 0 0 0 2px var(--bw-ink);
 }
 
 .nav-actions {
