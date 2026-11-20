@@ -1,7 +1,7 @@
 <template>
-  <div class="container py-4 settings-page">
-    <h1 class="h3 mb-1">{{ $t('settings.title') }}</h1>
-    <p class="text-muted mb-4">{{ $t('settings.subtitle') }}</p>
+  <div class="container page-container settings-page">
+    <h1 class="page-title mb-0">{{ $t('settings.title') }}</h1>
+    <p class="page-subtitle text-muted mt-1 mb-4">{{ $t('settings.subtitle') }}</p>
 
     <div v-if="!form" class="text-center py-5">
       <div class="spinner-border text-secondary" role="status"></div>
@@ -70,7 +70,7 @@
 
     <!-- Plateformes possédées : enregistrées dès le clic, pour le pays enregistré dans le profil -->
     <section v-if="profile" class="card p-4 mt-4" aria-labelledby="platforms-title">
-      <h2 id="platforms-title" class="h5 mb-1">{{ $t('settings.platforms') }}</h2>
+      <h2 id="platforms-title" class="h6 fw-bold mb-1">{{ $t('settings.platforms') }}</h2>
       <p class="text-muted small mb-3">
         {{ $t('settings.platformsHelp', { region: regionName(profile.watch_region) }) }}
       </p>
@@ -91,6 +91,7 @@
           @click="togglePlatform(provider.provider_id)"
         >
           <img :src="`https://image.tmdb.org/t/p/w92${provider.logo_path}`" alt="" width="52" height="52" />
+          <i v-if="platforms.includes(provider.provider_id)" class="bi bi-check-circle-fill check" aria-hidden="true"></i>
         </button>
       </div>
 
@@ -227,10 +228,12 @@ const togglePlatform = async (providerId: number) => {
 
 // Logo grisé tant que la plateforme n'est pas sélectionnée
 .provider-btn {
+  position: relative;
   padding: 3px;
   border-radius: 0.8rem;
-  border: 2px solid transparent;
-  background: var(--bw-surface-2);
+  border: 2px solid var(--bw-border);
+  background: #fff;
+  transition: border-color 0.15s ease;
 
   img {
     display: block;
@@ -252,6 +255,18 @@ const togglePlatform = async (providerId: number) => {
       opacity: 1;
       filter: none;
     }
+  }
+
+  // Coche bleu nuit sur les plateformes sélectionnées
+  .check {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    color: var(--bw-accent);
+    background: var(--bw-bg);
+    border-radius: 50%;
+    font-size: 1rem;
+    line-height: 1;
   }
 }
 </style>
