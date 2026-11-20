@@ -31,11 +31,11 @@
       <p class="text-muted mt-2 mb-0">{{ $t('search.noResults') }}</p>
     </div>
 
-    <div v-else class="row g-3">
-      <div v-for="movie in movies" :key="movie.id" class="col-6 col-sm-4 col-md-3 col-lg-2">
+    <ul v-else class="poster-grid">
+      <li v-for="movie in movies" :key="movie.id">
         <MovieCard :movie="movie" />
-      </div>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 

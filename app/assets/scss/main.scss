@@ -499,6 +499,61 @@ h1, h2, h3, .h1, .h2, .h3, .display-4, .display-5 {
   background: #fff;
 }
 
+// En-tête de page des maquettes : titre à gauche, filtres à droite
+.page-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+// Liste déroulante présentée comme un bouton blanc ("Decade ⌄")
+.filter-select {
+  width: auto;
+  // Largeur du texte choisi (comme les boutons de la maquette), pas de l'option la plus longue
+  field-sizing: content;
+  max-width: 16rem;
+  height: 2.5rem;
+  padding: 0 2.5rem 0 1rem;
+  border-color: var(--bw-border);
+  border-radius: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background-position: right 0.9rem center;
+  background-size: 14px 14px;
+
+  &:hover {
+    border-color: var(--bw-border-strong);
+  }
+}
+
+// Grille d'affiches des maquettes : colonnes de 190px alignées à gauche sur ordinateur
+.poster-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 0.875rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  @include media-breakpoint-up(sm) {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+
+  @include media-breakpoint-up(lg) {
+    grid-template-columns: repeat(auto-fill, 190px);
+    gap: 1.25rem 1.125rem;
+  }
+}
+
 .page-narrow {
   max-width: 780px;
 }
