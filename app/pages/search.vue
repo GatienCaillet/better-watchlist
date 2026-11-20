@@ -1,10 +1,11 @@
 <template>
-  <div class="container py-4">
-    <h1 class="h3 mb-3">{{ $t('search.title') }}</h1>
+  <div class="container page-container">
+    <h1 class="page-title mb-3">{{ $t('search.title') }}</h1>
 
     <form class="mb-4" role="search" @submit.prevent="submit">
       <label for="search-input" class="visually-hidden">{{ $t('search.placeholder') }}</label>
       <div class="input-group input-group-lg">
+        <span class="input-group-text" aria-hidden="true"><i class="bi bi-search"></i></span>
         <input
           id="search-input"
           v-model="query"
@@ -14,7 +15,6 @@
           autofocus
         />
         <button class="btn btn-primary px-4" type="submit">
-          <i class="bi bi-search" aria-hidden="true"></i>
           {{ $t('search.button') }}
         </button>
       </div>
@@ -26,7 +26,10 @@
       </div>
     </div>
 
-    <p v-else-if="searched && !movies.length" class="text-muted">{{ $t('search.noResults') }}</p>
+    <div v-else-if="searched && !movies.length" class="empty-state text-center py-5">
+      <i class="bi bi-film fs-1 text-muted" aria-hidden="true"></i>
+      <p class="text-muted mt-2 mb-0">{{ $t('search.noResults') }}</p>
+    </div>
 
     <div v-else class="row g-3">
       <div v-for="movie in movies" :key="movie.id" class="col-6 col-sm-4 col-md-3 col-lg-2">
@@ -72,3 +75,17 @@ watch(() => route.query.q, (value) => {
   runSearch()
 })
 </script>
+
+<style lang="scss" scoped>
+.page-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.empty-state {
+  border: 1px dashed var(--bw-border-strong);
+  border-radius: var(--bw-radius);
+  background: #fff;
+}
+</style>
