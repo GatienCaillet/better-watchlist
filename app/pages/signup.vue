@@ -1,8 +1,11 @@
 <template>
-  <div class="container py-5">
-    <div class="card signup-card shadow p-4 mx-auto">
-      <h1 class="h3 text-center mb-1">{{ $t('auth.signupTitle') }}</h1>
-      <p class="text-muted text-center small mb-4">{{ $t('auth.signupSubtitle') }}</p>
+  <div class="container page-container auth-page">
+    <div class="card shadow p-4 p-sm-5 mx-auto">
+      <div class="text-center mb-4">
+        <span class="auth-logo mx-auto mb-3" aria-hidden="true"><i class="bi bi-film"></i></span>
+        <h1 class="h3 mb-1">{{ $t('auth.signupTitle') }}</h1>
+        <p class="text-muted small mb-0">{{ $t('auth.signupSubtitle') }}</p>
+      </div>
 
       <!-- Confirmation par e-mail activée : on prévient l'utilisateur -->
       <div v-if="emailSent" class="alert alert-success d-flex gap-2 small mb-0" role="status">
@@ -21,6 +24,7 @@
             :class="{ 'is-invalid': errors.username }"
             aria-describedby="signup-username-help"
             autocomplete="username"
+            :placeholder="$t('auth.usernamePlaceholder')"
             maxlength="30"
             required
           />
@@ -39,6 +43,7 @@
             :class="{ 'is-invalid': errors.email }"
             aria-describedby="signup-email-error"
             autocomplete="email"
+            :placeholder="$t('auth.emailPlaceholder')"
             required
           />
           <div v-if="errors.email" id="signup-email-error" class="invalid-feedback">{{ errors.email }}</div>
@@ -54,6 +59,7 @@
             :class="{ 'is-invalid': errors.password }"
             aria-describedby="signup-password-help"
             autocomplete="new-password"
+            :placeholder="$t('auth.newPasswordPlaceholder')"
             required
           />
           <div id="signup-password-help" class="form-text" :class="{ 'text-danger': errors.password }">
@@ -66,7 +72,7 @@
           <span>{{ errorMessage }}</span>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+        <button type="submit" class="btn btn-primary w-100 py-2" :disabled="loading">
           <span v-if="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
           {{ loading ? $t('auth.signingUp') : $t('auth.signup') }}
         </button>
@@ -74,7 +80,7 @@
 
       <p class="text-center text-muted small mt-4 mb-0">
         {{ $t('auth.hasAccount') }}
-        <NuxtLinkLocale to="/login" class="fw-semibold">{{ $t('auth.login') }}</NuxtLinkLocale>
+        <NuxtLinkLocale to="/login" class="link-success fw-semibold">{{ $t('auth.login') }}</NuxtLinkLocale>
       </p>
     </div>
   </div>
@@ -147,7 +153,20 @@ watch(user, (value) => {
 </script>
 
 <style lang="scss" scoped>
-.signup-card {
-  max-width: 420px;
+.auth-page .card {
+  max-width: 440px;
+}
+
+// Pastille du logo en tête de carte
+.auth-logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bw-ink);
+  color: #fff;
+  font-size: 1.4rem;
 }
 </style>

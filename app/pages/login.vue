@@ -1,8 +1,11 @@
 <template>
-  <div class="container py-5">
-    <div class="card login-card shadow p-4 mx-auto">
-      <h1 class="h3 text-center mb-1">{{ $t('auth.loginTitle') }}</h1>
-      <p class="text-muted text-center small mb-4">{{ $t('auth.loginSubtitle') }}</p>
+  <div class="container page-container auth-page">
+    <div class="card shadow p-4 p-sm-5 mx-auto">
+      <div class="text-center mb-4">
+        <span class="auth-logo mx-auto mb-3" aria-hidden="true"><i class="bi bi-film"></i></span>
+        <h1 class="h3 mb-1">{{ $t('auth.loginTitle') }}</h1>
+        <p class="text-muted small mb-0">{{ $t('auth.loginSubtitle') }}</p>
+      </div>
 
       <form @submit.prevent="login">
         <div class="mb-3">
@@ -13,6 +16,7 @@
             type="email"
             class="form-control"
             autocomplete="email"
+            :placeholder="$t('auth.emailPlaceholder')"
             required
           />
         </div>
@@ -25,6 +29,7 @@
             type="password"
             class="form-control"
             autocomplete="current-password"
+            :placeholder="$t('auth.passwordPlaceholder')"
             required
           />
         </div>
@@ -34,7 +39,7 @@
           <span>{{ errorMessage }}</span>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+        <button type="submit" class="btn btn-primary w-100 py-2" :disabled="loading">
           <span v-if="loading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
           {{ loading ? $t('auth.loggingIn') : $t('auth.login') }}
         </button>
@@ -42,7 +47,7 @@
 
       <p class="text-center text-muted small mt-4 mb-0">
         {{ $t('auth.noAccount') }}
-        <NuxtLinkLocale to="/signup" class="fw-semibold">{{ $t('auth.signup') }}</NuxtLinkLocale>
+        <NuxtLinkLocale to="/signup" class="link-success fw-semibold">{{ $t('auth.signup') }}</NuxtLinkLocale>
       </p>
     </div>
   </div>
@@ -87,7 +92,20 @@ watch(user, (value) => {
 </script>
 
 <style lang="scss" scoped>
-.login-card {
-  max-width: 420px;
+.auth-page .card {
+  max-width: 440px;
+}
+
+// Pastille du logo en tête de carte
+.auth-logo {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bw-ink);
+  color: #fff;
+  font-size: 1.4rem;
 }
 </style>
